@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-2024
 
     steps:
-      - uses: ayushmanchhabra/globstar
+      - uses: ayushmanchhabra/globstar@v0.0.0
         with:
           version: 'latest'

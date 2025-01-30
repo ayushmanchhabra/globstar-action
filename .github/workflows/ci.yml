@@ -14,6 +14,6 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar@v0.0.0
+        uses: ayushmanchhabra/globstar-action@v0.0.0
         with:
-          version: 'latest'
+          version: "latest"

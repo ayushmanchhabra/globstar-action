@@ -1,0 +1,35 @@
+{
+  "name": "globstar-action",
+  "version": "0.0.0",
+  "description": "Setup DeepSourceCorp/globstar in GitHub Action environment",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "",
+    "dist": "ncc build index.js --license licenses.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayushmanchhabra/globstar-action.git"
+  },
+  "keywords": [
+    "globstar, deepsource",
+    "github-action"
+  ],
+  "author": "Ayushman Chhabra <ayushmxn@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ayushmanchhabra/globstar-action/issues"
+  },
+  "homepage": "https://github.com/ayushmanchhabra/globstar-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.0"
+  },
+  "volta": {
+    "node": "22.13.1",
+    "npm": "11.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.3"
+  }
+}

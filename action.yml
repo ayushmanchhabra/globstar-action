@@ -1,0 +1,14 @@
+name: 'Hello World'
+description: 'Greet someone and record the time'
+author: 'Ayushman Chhabra'
+inputs:
+  version:
+    description: 'Version to download'
+    required: true
+    default: 'latest'
+outputs:
+  version:
+    description: 'Version to download'
+runs:
+  using: 'node20'
+  main: 'index.js'

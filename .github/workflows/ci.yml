@@ -5,11 +5,15 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
-    runs-on: ubuntu-2024
-
+    runs-on: ubuntu-24.04
     steps:
-      - uses: ayushmanchhabra/globstar
+      - name: Setup Globstar
+        uses: ayushmanchhabra/globstar-action@download
         with:
-          version: 'latest'
+          version: "latest"

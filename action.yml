@@ -1,5 +1,5 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'DeepSourceCorp Globstar Action'
+description: 'Setup DeepSourceCorp/globstar in GitHub Action environment'
 author: 'Ayushman Chhabra'
 inputs:
   version:

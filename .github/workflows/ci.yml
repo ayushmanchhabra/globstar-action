@@ -1,0 +1,15 @@
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-2024
+
+    steps:
+      - uses: ayushmanchhabra/globstar
+        with:
+          version: 'latest'

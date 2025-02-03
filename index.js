@@ -12,24 +12,18 @@ async function main() {
 
         if (version === 'latest') {
             info('Fetching latest release version from GitHub');
-            const http = new HttpClient();
-            http.request('GET', 'https://api.github.com/repos/DeepSourceCorp/globstar/releases/latest').then(response => {
-                if (response.message.statusCode !== 200) {
-                    setFailed(`Failed to fetch latest release: ${response.message.statusCode}`);
-                    return;
-                }
-                const data = JSON.parse(response.message.body);
-                downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
+            const http = new HttpClient('ayushmanchhabra/globstar-action', [], {
+                allowRetries: true,
+                maxRetries: 3,
             });
 
-            info('Check if releases are available');
-            if (releases.length === 0) {
-                setFailed('No releases found');
+            const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
+            if (response.message.statusCode !== 200) {
+                setFailed(`Failed to fetch releases: ${response.message.statusCode}`);
                 return;
             }
-
-            const latestRelease = releases[0];
-            downloadUrl = latestRelease.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
+            const data = JSON.parse(response.message.body);
+            downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
         }

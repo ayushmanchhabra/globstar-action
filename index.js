@@ -7,11 +7,12 @@ import { join } from 'path';
 async function main() {
     try {
         const version = getInput('version');
+        const authToken = getInput('GITHUB_TOKEN');
         let downloadUrl;
 
         if (version === 'latest') {
             info('Fetching latest release version from GitHub');
-            const octokit = getOctokit(process.env.GITHUB_TOKEN);
+            const octokit = getOctokit(authToken);
             const { data: releases } = await octokit.repos.listReleases({
                 owner: 'DeepSourceCorp',
                 repo: 'globstar',

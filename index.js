@@ -8,6 +8,7 @@ import { join } from 'path';
 async function main() {
     try {
         const version = getInput('version');
+        const authToken = getInput('auth-token');
         let downloadUrl;
 
         if (version === 'latest') {

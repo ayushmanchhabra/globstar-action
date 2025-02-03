@@ -7,7 +7,7 @@ import { join } from 'path';
 async function main() {
     try {
         const version = getInput('version');
-        const authToken = getInput('GITHUB_TOKEN');
+        const authToken = getInput('auth-token');
         let downloadUrl;
 
         if (version === 'latest') {

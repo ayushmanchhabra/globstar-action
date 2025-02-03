@@ -15,7 +15,7 @@ async function main() {
         let downloadUrl;
 
         if (version === 'latest') {
-            info('Fetching latest release version from GitHub');
+            info('Fetching latest release version from GitHub', authToken);
             const octokit = getOctokit(authToken);
             const { data: releases } = await octokit.rest.repos.listReleases({
                 owner: 'DeepSourceCorp',

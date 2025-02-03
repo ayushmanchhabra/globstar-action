@@ -1,5 +1,6 @@
 import { getInput, info, setFailed, addPath } from '@actions/core';
 import { getOctokit } from '@actions/github';
+import { HttpClient } from '@actions/http-client';
 import { downloadTool, extractTar } from '@actions/tool-cache';
 import { platform as _platform, arch as _arch } from 'os';
 import { join } from 'path';
@@ -7,19 +8,18 @@ import { join } from 'path';
 async function main() {
     try {
         const version = getInput('version');
-        const authToken = getInput('auth-token');
-        if (authToken == '') {
-            setFailed('Missing auth-token input');
-            return;
-          }
         let downloadUrl;
 
         if (version === 'latest') {
             info('Fetching latest release version from GitHub');
-            const octokit = getOctokit(authToken);
-            const { data: releases } = await octokit.rest.repos.listReleases({
-                owner: 'DeepSourceCorp',
-                repo: 'globstar',
+            const http = new HttpClient();
+            http.request('GET', 'https://api.github.com/repos/DeepSourceCorp/globstar/releases/latest').then(response => {
+                if (response.message.statusCode !== 200) {
+                    setFailed(`Failed to fetch latest release: ${response.message.statusCode}`);
+                    return;
+                }
+                const data = JSON.parse(response.message.body);
+                downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
             });
 
             info('Check if releases are available');
@@ -60,7 +60,7 @@ function getPlatform() {
     }
 }
 
-function getArch () {
+function getArch() {
     const arch = _arch();
     if (arch === 'ia32') {
         return 'x86';

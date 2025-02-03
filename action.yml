@@ -6,10 +6,6 @@ inputs:
     description: 'Version to download'
     required: true
     default: 'latest'
-  auth-token:
-    description: 'Auth token to use for downloading the version'
-    required: true
-    default: ''
 runs:
   using: 'node20'
   main: 'dist/index.js'

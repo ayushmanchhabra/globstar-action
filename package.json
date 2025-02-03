@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Setup DeepSourceCorp/globstar in GitHub Action environment",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "test": "",
     "dist": "ncc build index.js --license licenses.txt",

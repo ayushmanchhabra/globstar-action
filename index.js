@@ -8,6 +8,10 @@ async function main() {
     try {
         const version = getInput('version');
         const authToken = getInput('auth-token');
+        if (!authToken) {
+            setFailed('Missing auth-token input');
+            return;
+          }
         let downloadUrl;
 
         if (version === 'latest') {

@@ -28,6 +28,6 @@ jobs:
         run: npm run prepare
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@download
+        uses: ayushmanchhabra/globstar-action@v0.1.0
         with:
           version: "latest"

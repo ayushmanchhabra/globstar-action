@@ -5,11 +5,29 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
-    runs-on: ubuntu-2024
-
+    runs-on: ubuntu-24.04
     steps:
-      - uses: ayushmanchhabra/globstar
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.2.0
         with:
-          version: 'latest'
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build action
+        run: npm run prepare
+
+      - name: Setup Globstar
+        uses: ayushmanchhabra/globstar-action@download
+        with:
+          version: "latest"

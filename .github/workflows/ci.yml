@@ -13,6 +13,15 @@ jobs:
   test:
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build action
+        run: npm run prepare
+
       - name: Setup Globstar
         uses: ayushmanchhabra/globstar-action@download
         with:

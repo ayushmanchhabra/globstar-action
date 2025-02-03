@@ -1,8 +1,8 @@
-import core from '@actions/core';
-import github from '@actions/github';
-import tc from '@actions/tool-cache';
-import os from 'os';
-import path from 'path';
+const core = require('@actions/core');
+const github = require('@actions/github');
+const tc = require('@actions/tool-cache');
+const os = require('os');
+const path = require('path');
 
 async function main() {
     try {

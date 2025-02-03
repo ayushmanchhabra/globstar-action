@@ -32,5 +32,5 @@ jobs:
       - name: Setup Globstar
         uses: ayushmanchhabra/globstar-action@test
         with:
-          auth-token: ${{ 'ABCDEF' }}
+          auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "latest"

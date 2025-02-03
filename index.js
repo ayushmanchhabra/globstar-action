@@ -22,6 +22,7 @@ async function main() {
                 repo: 'globstar',
             });
 
+            info('Check if releases are available');
             if (releases.length === 0) {
                 setFailed('No releases found');
                 return;

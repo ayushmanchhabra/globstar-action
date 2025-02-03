@@ -1,24 +1,24 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const tc = require('@actions/tool-cache');
-const os = require('os');
-const path = require('path');
+import { getInput, info, setFailed, addPath } from '@actions/core';
+import { getOctokit } from '@actions/github';
+import { downloadTool, extractTar } from '@actions/tool-cache';
+import { platform as _platform, arch as _arch } from 'os';
+import { join } from 'path';
 
 async function main() {
     try {
-        const version = core.getInput('version');
+        const version = getInput('version');
         let downloadUrl;
 
         if (version === 'latest') {
-            core.info('Fetching latest release version from GitHub');
-            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+            info('Fetching latest release version from GitHub');
+            const octokit = getOctokit(process.env.GITHUB_TOKEN);
             const { data: releases } = await octokit.repos.listReleases({
                 owner: 'DeepSourceCorp',
                 repo: 'globstar',
             });
 
             if (releases.length === 0) {
-                core.setFailed('No releases found');
+                setFailed('No releases found');
                 return;
             }
 
@@ -28,20 +28,20 @@ async function main() {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
         }
 
-        core.info(`Downloading binary from ${downloadUrl}`);
-        const downloadPath = await tc.downloadTool(downloadUrl);
-        const extractedPath = await tc.extractTar(downloadPath);
-        const binaryPath = path.join(extractedPath, 'globstar');
+        info(`Downloading binary from ${downloadUrl}`);
+        const downloadPath = await downloadTool(downloadUrl);
+        const extractedPath = await extractTar(downloadPath);
+        const binaryPath = join(extractedPath, 'globstar');
 
-        core.addPath(binaryPath);
-        core.info(`Added ${binaryPath} to PATH`);
+        addPath(binaryPath);
+        info(`Added ${binaryPath} to PATH`);
     } catch (error) {
-        core.setFailed(error.message);
+        setFailed(error.message);
     }
 }
 
 function getPlatform() {
-    const platform = os.platform();
+    const platform = _platform();
 
     if (platform === 'linux') {
         return 'linux';
@@ -55,7 +55,7 @@ function getPlatform() {
 }
 
 function getArch () {
-    const arch = os.arch();
+    const arch = _arch();
     if (arch === 'ia32') {
         return 'x86';
     } else if (arch === 'x64') {

@@ -1,5 +1,5 @@
 import { getInput, info, addPath } from '@actions/core';
-import { HttpClient } from '@actions/http-client';
+import { HttpClient, HttpClientError } from '@actions/http-client';
 import { downloadTool, extractTar } from '@actions/tool-cache';
 import { platform as _platform, arch as _arch } from 'os';
 import { join } from 'path';
@@ -39,7 +39,7 @@ async function main() {
     } catch (error) {
         info(error.statusCode)
         if (
-            error instanceof hc.HttpClientError &&
+            error instanceof HttpClientError &&
             (error.statusCode === 403 || error.statusCode === 429)
           ) {
             info(

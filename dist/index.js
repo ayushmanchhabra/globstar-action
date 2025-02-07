@@ -30020,7 +30020,7 @@ async function main() {
     } catch (error) {
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(error.statusCode)
         if (
-            error instanceof hc.HttpClientError &&
+            error instanceof _actions_http_client__WEBPACK_IMPORTED_MODULE_1__.HttpClientError &&
             (error.statusCode === 403 || error.statusCode === 429)
           ) {
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(

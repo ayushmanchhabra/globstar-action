@@ -1,5 +1,6 @@
 import { getInput, info, setFailed, addPath } from '@actions/core';
 import { getOctokit } from '@actions/github';
+import { HttpClient } from '@actions/http-client';
 import { downloadTool, extractTar } from '@actions/tool-cache';
 import { platform as _platform, arch as _arch } from 'os';
 import { join } from 'path';
@@ -7,23 +8,23 @@ import { join } from 'path';
 async function main() {
     try {
         const version = getInput('version');
+        const authToken = getInput('auth-token');
         let downloadUrl;
 
         if (version === 'latest') {
             info('Fetching latest release version from GitHub');
-            const octokit = getOctokit(process.env.GITHUB_TOKEN);
-            const { data: releases } = await octokit.repos.listReleases({
-                owner: 'DeepSourceCorp',
-                repo: 'globstar',
+            const http = new HttpClient('ayushmanchhabra/globstar-action', [], {
+                allowRetries: true,
+                maxRetries: 3,
             });
 
-            if (releases.length === 0) {
-                setFailed('No releases found');
+            const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
+            if (response.message.statusCode !== 200) {
+                setFailed(`Failed to fetch releases: ${response.message.statusCode}`);
                 return;
             }
-
-            const latestRelease = releases[0];
-            downloadUrl = latestRelease.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
+            const data = JSON.parse(response.message.body);
+            downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
         }
@@ -54,7 +55,7 @@ function getPlatform() {
     }
 }
 
-function getArch () {
+function getArch() {
     const arch = _arch();
     if (arch === 'ia32') {
         return 'x86';

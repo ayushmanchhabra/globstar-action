@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "",
-    "dist": "ncc build index.js --license licenses.txt",
-    "prepare": "npm run dist"
+    "dist": "ncc build index.js --license licenses.txt"
   },
   "repository": {
     "type": "git",
@@ -26,6 +25,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
+    "@actions/http-client": "^2.2.3",
     "@actions/tool-cache": "^2.0.2"
   },
   "volta": {

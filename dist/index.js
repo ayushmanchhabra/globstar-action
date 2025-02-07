@@ -30000,7 +30000,6 @@ async function main() {
 
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(response.result)
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
@@ -30019,17 +30018,16 @@ async function main() {
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.addPath)(binaryPath);
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Added ${binaryPath} to PATH`);
     } catch (error) {
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(error.statusCode)
         if (
             error instanceof _actions_http_client__WEBPACK_IMPORTED_MODULE_1__.HttpClientError &&
             (error.statusCode === 403 || error.statusCode === 429)
           ) {
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(
               `Received HTTP status code ${error.statusCode}. This usually indicates the rate limit has been exceeded`
             );
         }
         else {
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(error.message);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
         }
     }
 }

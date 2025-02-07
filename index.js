@@ -24,7 +24,8 @@ async function main() {
                 setFailed(`Failed to fetch releases: ${response.message.statusCode}`);
                 return;
             }
-            const data = JSON.parse(response.message.body);
+            info(response)
+            const data = JSON.parse(response.result);
             downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;

@@ -30000,11 +30000,10 @@ async function main() {
 
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(response)
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(response.result)
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(response)
             const data = JSON.parse(response.result);
             downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {

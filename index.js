@@ -19,11 +19,10 @@ async function main() {
 
             info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
-            info(response)
+            info(response.result)
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
-            info(response)
             const data = JSON.parse(response.result);
             downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {

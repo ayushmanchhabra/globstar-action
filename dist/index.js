@@ -30006,7 +30006,7 @@ async function main() {
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Parse the result', response.result[0].asset)
 
             for (const item of response.result) {
-                ;(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(item)
+                ;(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(Object.keys(item))
             }
 
             downloadUrl = response.result.find(asset => asset.name.includes(getPlatform())).browser_download_url;

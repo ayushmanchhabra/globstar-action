@@ -25,7 +25,7 @@ async function main() {
             info('Parse the result', response.result[0].asset)
 
             for (const item of response.result) {
-                info(item)
+                info(Object.keys(item))
             }
 
             downloadUrl = response.result.find(asset => asset.name.includes(getPlatform())).browser_download_url;

@@ -3,7 +3,10 @@
 A GitHub Action for DeepSourceCorp/globstar
 
 ```yaml
-uses: ayushmanchhabra/globstar-action@v0.0.0
+env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+uses: ayushmanchhabra/globstar-action@v0.2.1
 with:
     version: 'latest'
 ```
@@ -18,4 +21,3 @@ with:
 ### Version
 
 The version downloaded.
-

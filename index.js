@@ -1,6 +1,5 @@
-import { getInput, info, setFailed, addPath } from '@actions/core';
-import { getOctokit } from '@actions/github';
-import { HttpClient } from '@actions/http-client';
+import { getInput, info, addPath, setFailed } from '@actions/core';
+import { HttpClient, HttpClientError } from '@actions/http-client';
 import { downloadTool, extractTar } from '@actions/tool-cache';
 import { platform as _platform, arch as _arch } from 'os';
 import { join } from 'path';
@@ -12,19 +11,18 @@ async function main() {
         let downloadUrl;
 
         if (version === 'latest') {
-            info('Fetching latest release version from GitHub');
+            info('Initializing HTTP client');
             const http = new HttpClient('ayushmanchhabra/globstar-action', [], {
                 allowRetries: true,
                 maxRetries: 3,
             });
 
+            info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
-            if (response.message.statusCode !== 200) {
-                setFailed(`Failed to fetch releases: ${response.message.statusCode}`);
-                return;
+            if (response.statusCode !== 200) {
+                throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
-            const data = JSON.parse(response.message.body);
-            downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
+            downloadUrl = response.result[0].assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
         }
@@ -37,7 +35,17 @@ async function main() {
         addPath(binaryPath);
         info(`Added ${binaryPath} to PATH`);
     } catch (error) {
-        setFailed(error.message);
+        if (
+            error instanceof HttpClientError &&
+            (error.statusCode === 403 || error.statusCode === 429)
+          ) {
+            setFailed(
+              `Received HTTP status code ${error.statusCode}. This usually indicates the rate limit has been exceeded`
+            );
+        }
+        else {
+            setFailed(error.message);
+        }
     }
 }
 

@@ -23,6 +23,7 @@ async function main() {
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
+            info('Parse the result')
             const data = JSON.parse(response.result);
             downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {

@@ -22,12 +22,6 @@ async function main() {
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
-            info('Parse the result', response.result[0].asset)
-
-            for (const item of response.result) {
-                info(Object.keys(item))
-            }
-
             downloadUrl = response.result[0].assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;

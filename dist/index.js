@@ -34234,9 +34234,11 @@ module.exports = parseParams
 var __webpack_exports__ = {};
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7484);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(3228);
-/* harmony import */ var _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3472);
-/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(857);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(6928);
+/* harmony import */ var _actions_http_client__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4844);
+/* harmony import */ var _actions_tool_cache__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(3472);
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(857);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(6928);
+
 
 
 
@@ -34246,31 +34248,31 @@ var __webpack_exports__ = {};
 async function main() {
     try {
         const version = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('version');
+        const authToken = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('auth-token');
         let downloadUrl;
 
         if (version === 'latest') {
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Fetching latest release version from GitHub');
-            const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(process.env.GITHUB_TOKEN);
-            const { data: releases } = await octokit.repos.listReleases({
-                owner: 'DeepSourceCorp',
-                repo: 'globstar',
+            const http = new _actions_http_client__WEBPACK_IMPORTED_MODULE_2__.HttpClient('ayushmanchhabra/globstar-action', [], {
+                allowRetries: true,
+                maxRetries: 3,
             });
 
-            if (releases.length === 0) {
-                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)('No releases found');
+            const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
+            if (response.message.statusCode !== 200) {
+                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(`Failed to fetch releases: ${response.message.statusCode}`);
                 return;
             }
-
-            const latestRelease = releases[0];
-            downloadUrl = latestRelease.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
+            const data = JSON.parse(response.message.body);
+            downloadUrl = data.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
         }
 
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Downloading binary from ${downloadUrl}`);
-        const downloadPath = await (0,_actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.downloadTool)(downloadUrl);
-        const extractedPath = await (0,_actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.extractTar)(downloadPath);
-        const binaryPath = (0,path__WEBPACK_IMPORTED_MODULE_4__.join)(extractedPath, 'globstar');
+        const downloadPath = await (0,_actions_tool_cache__WEBPACK_IMPORTED_MODULE_3__.downloadTool)(downloadUrl);
+        const extractedPath = await (0,_actions_tool_cache__WEBPACK_IMPORTED_MODULE_3__.extractTar)(downloadPath);
+        const binaryPath = (0,path__WEBPACK_IMPORTED_MODULE_5__.join)(extractedPath, 'globstar');
 
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.addPath)(binaryPath);
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Added ${binaryPath} to PATH`);
@@ -34280,7 +34282,7 @@ async function main() {
 }
 
 function getPlatform() {
-    const platform = (0,os__WEBPACK_IMPORTED_MODULE_3__.platform)();
+    const platform = (0,os__WEBPACK_IMPORTED_MODULE_4__.platform)();
 
     if (platform === 'linux') {
         return 'linux';
@@ -34293,8 +34295,8 @@ function getPlatform() {
     }
 }
 
-function getArch () {
-    const arch = (0,os__WEBPACK_IMPORTED_MODULE_3__.arch)();
+function getArch() {
+    const arch = (0,os__WEBPACK_IMPORTED_MODULE_4__.arch)();
     if (arch === 'ia32') {
         return 'x86';
     } else if (arch === 'x64') {

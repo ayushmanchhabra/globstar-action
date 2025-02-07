@@ -12,8 +12,10 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-24.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
-      contents: read 
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2

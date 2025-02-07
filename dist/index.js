@@ -30003,7 +30003,7 @@ async function main() {
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Parse the result')
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Parse the result',response[0].url)
             downloadUrl = response.result.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;

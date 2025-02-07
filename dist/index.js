@@ -30009,7 +30009,7 @@ async function main() {
                 ;(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(Object.keys(item))
             }
 
-            downloadUrl = response.result.find(asset => asset.name.includes(getPlatform())).browser_download_url;
+            downloadUrl = response.result.assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
         }

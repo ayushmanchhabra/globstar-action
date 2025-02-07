@@ -1,6 +1,32 @@
 # globstar-action
 
-A GitHub Action for DeepSourceCorp/globstar
+A GitHub Action for [DeepSourceCorp/globstar](https://github.com/DeepSourceCorp/globstar/).
+
+```yaml
+uses: ayushmanchhabra/globstar-action@v0.2.1
+```
+
+## Inputs
+
+### version
+
+**Optional** The version to download. Defaults to `latest`. Please consult [globstart releases](https://github.com/DeepSourceCorp/globstar/releases) for specific versions.
+
+```yaml
+uses: ayushmanchhabra/globstar-action@v0.2.1
+with:
+    version: 'latest'
+```
+
+```yaml
+uses: ayushmanchhabra/globstar-action@v0.2.1
+with:
+    version: 'v0.1.1'
+```
+
+### auth-token
+
+**Optional** The authentication token to use. Defaults to `github.token`. You will need to specify an environment variable for this to work properly.
 
 ```yaml
 env:
@@ -8,16 +34,5 @@ env:
 
 uses: ayushmanchhabra/globstar-action@v0.2.1
 with:
-    version: 'latest'
+    auth-token: ${{ GITHUB_TOKEN }}
 ```
-
-## Inputs
-
-### Version
-
-**Required** The version to download. Defaults to `latest`.
-## Outputs
-
-### Version
-
-The version downloaded.

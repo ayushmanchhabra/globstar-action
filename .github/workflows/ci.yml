@@ -32,7 +32,7 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@test
+        uses: ayushmanchhabra/globstar-action@fix/download
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "latest"

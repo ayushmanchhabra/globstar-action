@@ -1,5 +1,4 @@
 import { getInput, info, setFailed, addPath } from '@actions/core';
-import { getOctokit } from '@actions/github';
 import { HttpClient } from '@actions/http-client';
 import { downloadTool, extractTar } from '@actions/tool-cache';
 import { platform as _platform, arch as _arch } from 'os';
@@ -39,7 +38,18 @@ async function main() {
         addPath(binaryPath);
         info(`Added ${binaryPath} to PATH`);
     } catch (error) {
-        setFailed(error.message);
+        core.info(error.statusCode)
+        if (
+            error instanceof hc.HttpClientError &&
+            (error.statusCode === 403 || error.statusCode === 429)
+          ) {
+            core.info(
+              `Received HTTP status code ${error.statusCode}. This usually indicates the rate limit has been exceeded`
+            );
+        }
+        else {
+            core.info(error.message);
+        }
     }
 }
 

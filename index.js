@@ -1,4 +1,4 @@
-import { getInput, info, setFailed, addPath } from '@actions/core';
+import { getInput, info, addPath } from '@actions/core';
 import { HttpClient } from '@actions/http-client';
 import { downloadTool, extractTar } from '@actions/tool-cache';
 import { platform as _platform, arch as _arch } from 'os';
@@ -19,7 +19,7 @@ async function main() {
 
             info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
-            if (response.message.statusCode !== 200) {
+            if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.message.statusCode}`);
             }
             info(response)
@@ -37,17 +37,17 @@ async function main() {
         addPath(binaryPath);
         info(`Added ${binaryPath} to PATH`);
     } catch (error) {
-        core.info(error.statusCode)
+        info(error.statusCode)
         if (
             error instanceof hc.HttpClientError &&
             (error.statusCode === 403 || error.statusCode === 429)
           ) {
-            core.info(
+            info(
               `Received HTTP status code ${error.statusCode}. This usually indicates the rate limit has been exceeded`
             );
         }
         else {
-            core.info(error.message);
+            info(error.message);
         }
     }
 }

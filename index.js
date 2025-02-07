@@ -20,8 +20,7 @@ async function main() {
             info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
             if (response.message.statusCode !== 200) {
-                setFailed(`Failed to fetch releases: ${response.message.statusCode}`);
-                return;
+                throw new Error(`Failed to fetch releases: ${response.message.statusCode}`);
             }
             info(response)
             const data = JSON.parse(response.result);

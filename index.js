@@ -11,14 +11,15 @@ async function main() {
         let downloadUrl;
 
         if (version === 'latest') {
-            info('Initializing HTTP client');
+            // info('Initializing HTTP client');
             const http = new HttpClient('ayushmanchhabra/globstar-action', [], {
                 allowRetries: true,
                 maxRetries: 3,
             });
 
-            info('Fetching latest release version from GitHub');
+            // info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
+            info(response)
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }

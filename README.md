@@ -13,13 +13,13 @@ uses: ayushmanchhabra/globstar-action@v0
 **Optional** The version to download. Defaults to `latest`. Please consult [globstart releases](https://github.com/DeepSourceCorp/globstar/releases) for specific versions.
 
 ```yaml
-uses: ayushmanchhabra/globstar-action@v0.2.2
+uses: ayushmanchhabra/globstar-action@v0
 with:
     version: 'latest'
 ```
 
 ```yaml
-uses: ayushmanchhabra/globstar-action@v0.2.2
+uses: ayushmanchhabra/globstar-action@v0
 with:
     version: 'v0.1.1'
 ```
@@ -32,7 +32,7 @@ with:
 env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-uses: ayushmanchhabra/globstar-action@v0.2.2
+uses: ayushmanchhabra/globstar-action@v0
 with:
     auth-token: ${{ GITHUB_TOKEN }}
 ```

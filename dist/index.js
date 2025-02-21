@@ -29974,31 +29974,39 @@ module.exports = parseParams
 /******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7484);
-/* harmony import */ var _actions_http_client__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4844);
-/* harmony import */ var _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3472);
-/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(857);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(6928);
+
+// EXTERNAL MODULE: external "os"
+var external_os_ = __nccwpck_require__(857);
+;// CONCATENATED MODULE: external "node:path"
+const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(7484);
+// EXTERNAL MODULE: ./node_modules/@actions/http-client/lib/index.js
+var lib = __nccwpck_require__(4844);
+// EXTERNAL MODULE: ./node_modules/@actions/tool-cache/lib/tool-cache.js
+var tool_cache = __nccwpck_require__(3472);
+;// CONCATENATED MODULE: ./index.js
 
 
 
 
 
 
-async function main() {
+
+async function setupGlobStar() {
     try {
-        const version = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('version');
-        const authToken = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('auth-token');
+        const version = core.getInput('version');
+        const authToken = core.getInput('auth-token');
         let downloadUrl;
 
         if (version === 'latest') {
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Initializing HTTP client');
-            const http = new _actions_http_client__WEBPACK_IMPORTED_MODULE_1__.HttpClient('ayushmanchhabra/globstar-action', [], {
+            core.info('Initializing HTTP client');
+            const http = new lib.HttpClient('ayushmanchhabra/globstar-action', [], {
                 allowRetries: true,
                 maxRetries: 3,
             });
 
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Fetching latest release version from GitHub');
+            core.info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
@@ -30008,30 +30016,30 @@ async function main() {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
         }
 
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Downloading binary from ${downloadUrl}`);
-        const downloadPath = await (0,_actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.downloadTool)(downloadUrl);
-        const extractedPath = await (0,_actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.extractTar)(downloadPath);
-        const binaryPath = (0,path__WEBPACK_IMPORTED_MODULE_4__.join)(extractedPath, 'globstar');
+        core.info(`Downloading binary from ${downloadUrl}`);
+        const downloadPath = await tool_cache.downloadTool(downloadUrl);
+        const extractedPath = await tool_cache.extractTar(downloadPath);
+        const binaryPath = external_node_path_namespaceObject.join(extractedPath, 'globstar');
 
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.addPath)(binaryPath);
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Added ${binaryPath} to PATH`);
+        core.addPath(binaryPath);
+        core.info(`Added ${binaryPath} to PATH`);
     } catch (error) {
         if (
-            error instanceof _actions_http_client__WEBPACK_IMPORTED_MODULE_1__.HttpClientError &&
+            error instanceof lib.HttpClientError &&
             (error.statusCode === 403 || error.statusCode === 429)
           ) {
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(
+            core.setFailed(
               `Received HTTP status code ${error.statusCode}. This usually indicates the rate limit has been exceeded`
             );
         }
         else {
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
+            core.setFailed(error.message);
         }
     }
 }
 
 function getPlatform() {
-    const platform = (0,os__WEBPACK_IMPORTED_MODULE_3__.platform)();
+    const platform = external_os_.platform();
 
     if (platform === 'linux') {
         return 'linux';
@@ -30045,7 +30053,7 @@ function getPlatform() {
 }
 
 function getArch() {
-    const arch = (0,os__WEBPACK_IMPORTED_MODULE_3__.arch)();
+    const arch = external_os_.arch();
     if (arch === 'ia32') {
         return 'x86';
     } else if (arch === 'x64') {
@@ -30057,5 +30065,5 @@ function getArch() {
     }
 }
 
-main();
+setupGlobStar();
 

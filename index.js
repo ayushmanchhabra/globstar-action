@@ -1,4 +1,4 @@
-import os from 'os';
+import os from 'node:os';
 import path from 'node:path';
 
 import core from '@actions/core';
@@ -60,7 +60,7 @@ function getPlatform() {
     } else if (platform === 'win32') {
         return 'windows';
     } else {
-        throw new Error(`Unsupported platform: ${platform} ${arch}`);
+        throw new Error(`Unsupported platform: ${platform}`);
     }
 }
 

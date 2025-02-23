@@ -29975,8 +29975,8 @@ module.exports = parseParams
 /************************************************************************/
 var __webpack_exports__ = {};
 
-// EXTERNAL MODULE: external "os"
-var external_os_ = __nccwpck_require__(857);
+;// CONCATENATED MODULE: external "node:os"
+const external_node_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:os");
 ;// CONCATENATED MODULE: external "node:path"
 const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
@@ -30039,7 +30039,7 @@ async function setupGlobStar() {
 }
 
 function getPlatform() {
-    const platform = external_os_.platform();
+    const platform = external_node_os_namespaceObject.platform();
 
     if (platform === 'linux') {
         return 'linux';
@@ -30048,12 +30048,12 @@ function getPlatform() {
     } else if (platform === 'win32') {
         return 'windows';
     } else {
-        throw new Error(`Unsupported platform: ${platform} ${arch}`);
+        throw new Error(`Unsupported platform: ${platform}`);
     }
 }
 
 function getArch() {
-    const arch = external_os_.arch();
+    const arch = external_node_os_namespaceObject.arch();
     if (arch === 'ia32') {
         return 'x86';
     } else if (arch === 'x64') {

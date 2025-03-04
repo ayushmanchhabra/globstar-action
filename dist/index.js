@@ -30001,6 +30001,7 @@ async function setupGlobStar() {
         const version = core.getInput('version');
         const authToken = core.getInput('auth-token');
         let downloadUrl;
+        let shasumUrl;
 
         if (version === 'latest') {
             core.info('Initializing HTTP client');
@@ -30015,15 +30016,16 @@ async function setupGlobStar() {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
             downloadUrl = response.result[0].assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
+            shasumUrl = response.result[0].assets.find(asset => asset.name.includes('checksums')).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
+            shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/checksums.txt`;
         }
 
         core.info(`Downloading binary from ${downloadUrl}`);
         const downloadPath = await tool_cache.downloadTool(downloadUrl);
 
         core.info(`Verifying shasum of Globstar binary.`);
-        const shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/checksums.txt`;
         const shasumFilePath = await tool_cache.downloadTool(shasumUrl);
         const shasumFileBuffer = await external_node_fs_namespaceObject.promises.readFile(shasumFilePath, { encoding: 'utf-8' });
 

@@ -29975,6 +29975,8 @@ module.exports = parseParams
 /************************************************************************/
 var __webpack_exports__ = {};
 
+;// CONCATENATED MODULE: external "node:fs"
+const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: external "node:os"
 const external_node_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:os");
 ;// CONCATENATED MODULE: external "node:path"
@@ -29986,6 +29988,7 @@ var lib = __nccwpck_require__(4844);
 // EXTERNAL MODULE: ./node_modules/@actions/tool-cache/lib/tool-cache.js
 var tool_cache = __nccwpck_require__(3472);
 ;// CONCATENATED MODULE: ./index.js
+
 
 
 
@@ -30018,6 +30021,33 @@ async function setupGlobStar() {
 
         core.info(`Downloading binary from ${downloadUrl}`);
         const downloadPath = await tool_cache.downloadTool(downloadUrl);
+
+        core.info(`Verifying shasums of Globstar binary.`);
+        const shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/${version}/checksums.txt`;
+        const shasumFilePath = await tool_cache.downloadTool(shasumUrl);
+        const shasumFileBuffer = await external_node_fs_namespaceObject.promises.readFile(shasumFilePath, { encoding: 'utf-8' });
+
+        const shasums = shasumFileBuffer.trim().split('\n');
+        const storedShasum = shasums.forEach((line) => {
+            const [shasum, release] = line.split(/\s+/);
+            if (release === `globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`) {
+                return shasum;
+            }
+        });
+        if (!storedShasum) {
+            throw new Error(`Unable to get shasum for globstar_${version}_${getPlatform()}_${getArch()}.tar.gz release.`);
+        }
+
+        const fileBuffer = await external_node_fs_namespaceObject.promises.readFile(downloadPath);
+        const hash = crypto.createHash('sha256');
+        hash.update(fileBuffer);
+        const generatedShasum = hash.digest('hex');
+        if ((storedShasum !== generatedShasum)) {
+            throw new Error(`Expected ${storedShasum}, but got ${generatedShasum}`);
+        }
+
+        core.info(`Verification of Globstar binary is successful`);
+
         const extractedPath = await tool_cache.extractTar(downloadPath);
         const binaryPath = external_node_path_namespaceObject.join(extractedPath, 'globstar');
 

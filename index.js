@@ -26,14 +26,14 @@ async function setupGlobStar() {
             }
             downloadUrl = response.result[0].assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
         } else {
-            downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
+            downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
         }
 
         core.info(`Downloading binary from ${downloadUrl}`);
         const downloadPath = await cache.downloadTool(downloadUrl);
 
-        core.info(`Verifying shasums of Globstar binary.`);
-        const shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/${version}/checksums.txt`;
+        core.info(`Verifying shasum of Globstar binary.`);
+        const shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/checksums.txt`;
         const shasumFilePath = await cache.downloadTool(shasumUrl);
         const shasumFileBuffer = await fs.promises.readFile(shasumFilePath, { encoding: 'utf-8' });
 

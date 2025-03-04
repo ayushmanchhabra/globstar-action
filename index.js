@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -30,6 +31,33 @@ async function setupGlobStar() {
 
         core.info(`Downloading binary from ${downloadUrl}`);
         const downloadPath = await cache.downloadTool(downloadUrl);
+
+        core.info(`Verifying shasums of Globstar binary.`);
+        const shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/${version}/checksums.txt`;
+        const shasumFilePath = await cache.downloadTool(shasumUrl);
+        const shasumFileBuffer = await fs.promises.readFile(shasumFilePath, { encoding: 'utf-8' });
+
+        const shasums = shasumFileBuffer.trim().split('\n');
+        const storedShasum = shasums.forEach((line) => {
+            const [shasum, release] = line.split(/\s+/);
+            if (release === `globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`) {
+                return shasum;
+            }
+        });
+        if (!storedShasum) {
+            throw new Error(`Unable to get shasum for globstar_${version}_${getPlatform()}_${getArch()}.tar.gz release.`);
+        }
+
+        const fileBuffer = await fs.promises.readFile(downloadPath);
+        const hash = crypto.createHash('sha256');
+        hash.update(fileBuffer);
+        const generatedShasum = hash.digest('hex');
+        if ((storedShasum !== generatedShasum)) {
+            throw new Error(`Expected ${storedShasum}, but got ${generatedShasum}`);
+        }
+
+        core.info(`Verification of Globstar binary is successful`);
+
         const extractedPath = await cache.extractTar(downloadPath);
         const binaryPath = path.join(extractedPath, 'globstar');
 

@@ -40,7 +40,7 @@ async function setupGlobStar() {
         const shasumFileBuffer = await fs.promises.readFile(shasumFilePath, { encoding: 'utf-8' });
 
         const shasums = shasumFileBuffer.trim().split('\n');
-        const storedShasum = shasums.forEach((line) => {
+        const storedShasum = shasums.find((line) => {
             const [shasum, release] = line.split(/\s+/);
             if (release === `globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`) {
                 return shasum;

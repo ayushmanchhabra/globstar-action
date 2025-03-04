@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import crypto from 'crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -48,7 +48,6 @@ async function setupGlobStar() {
             }
         });
         if (!storedShasum) {
-            core.info('SHASUM: ', storedShasum);
             throw new Error(`Unable to get shasum for globstar_${version}_${getPlatform()}_${getArch()}.tar.gz release.`);
         }
 

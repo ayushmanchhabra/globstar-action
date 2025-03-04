@@ -37,4 +37,4 @@ jobs:
         uses: ayushmanchhabra/globstar-action@shasum
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
-          version: "latest"
+          version: "0.4.1"

@@ -27,7 +27,7 @@ async function setupGlobStar() {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
             downloadUrl = response.result[0].assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
-            shasumUrl = response.result[0].assets.find(asset => asset.name.includes('checksums')).browser_download_url;
+            shasumUrl = response.result[0].assets.find(asset => asset.name.includes('checksums.txt')).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
             shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/${version}/checksums.txt`;

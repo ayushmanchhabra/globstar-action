@@ -29975,6 +29975,8 @@ module.exports = parseParams
 /************************************************************************/
 var __webpack_exports__ = {};
 
+// EXTERNAL MODULE: external "node:crypto"
+var external_node_crypto_ = __nccwpck_require__(7598);
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: external "node:os"
@@ -29988,6 +29990,7 @@ var lib = __nccwpck_require__(4844);
 // EXTERNAL MODULE: ./node_modules/@actions/tool-cache/lib/tool-cache.js
 var tool_cache = __nccwpck_require__(3472);
 ;// CONCATENATED MODULE: ./index.js
+
 
 
 
@@ -30037,12 +30040,11 @@ async function setupGlobStar() {
             }
         });
         if (!storedShasum) {
-            core.info('SHASUM: ', storedShasum);
             throw new Error(`Unable to get shasum for globstar_${version}_${getPlatform()}_${getArch()}.tar.gz release.`);
         }
 
         const fileBuffer = await external_node_fs_namespaceObject.promises.readFile(downloadPath);
-        const hash = crypto.createHash('sha256');
+        const hash = external_node_crypto_.createHash('sha256');
         hash.update(fileBuffer);
         const generatedShasum = hash.digest('hex');
         if ((storedShasum !== generatedShasum)) {

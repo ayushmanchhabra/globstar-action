@@ -38,7 +38,7 @@ A GitHub Action for [DeepSourceCorp/globstar](https://github.com/DeepSourceCorp/
     auth-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-## Developing
+## Contributing
 
 ### Testing
 

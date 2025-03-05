@@ -29975,8 +29975,6 @@ module.exports = parseParams
 /************************************************************************/
 var __webpack_exports__ = {};
 
-// EXTERNAL MODULE: external "node:crypto"
-var external_node_crypto_ = __nccwpck_require__(7598);
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: external "node:os"
@@ -29998,6 +29996,7 @@ var tool_cache = __nccwpck_require__(3472);
 
 
 
+const index_crypto = require('node:crypto');
 
 async function setupGlobStar() {
     try {
@@ -30044,7 +30043,7 @@ async function setupGlobStar() {
         }
 
         const fileBuffer = await external_node_fs_namespaceObject.promises.readFile(downloadPath);
-        const hash = external_node_crypto_.createHash('sha256');
+        const hash = index_crypto.createHash('sha256');
         hash.update(fileBuffer);
         const generatedShasum = hash.digest('hex');
         if ((storedShasum !== generatedShasum)) {

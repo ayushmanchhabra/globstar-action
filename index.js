@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -6,6 +5,8 @@ import path from 'node:path';
 import core from '@actions/core';
 import client from '@actions/http-client';
 import cache from '@actions/tool-cache';
+
+const crypto = require('node:crypto');
 
 async function setupGlobStar() {
     try {

@@ -7,8 +7,6 @@ import core from '@actions/core';
 import client from '@actions/http-client';
 import cache from '@actions/tool-cache';
 
-core.info('Crypto: ', crypto);
-
 async function setupGlobStar() {
     try {
         const version = core.getInput('version');

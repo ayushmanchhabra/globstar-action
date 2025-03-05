@@ -29999,8 +29999,6 @@ var tool_cache = __nccwpck_require__(3472);
 
 
 
-core.info('Crypto: ', external_node_crypto_);
-
 async function setupGlobStar() {
     try {
         const version = core.getInput('version');

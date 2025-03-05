@@ -37,3 +37,10 @@ A GitHub Action for [DeepSourceCorp/globstar](https://github.com/DeepSourceCorp/
   with:
     auth-token: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+## Developing
+
+### Testing
+
+1. In `.github/workflows/ci.yml`, change the `main` branch to your pull request's branch's name.
+1. Always `npm run dist` before making a Git commit.

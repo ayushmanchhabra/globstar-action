@@ -44,3 +44,4 @@ A GitHub Action for [DeepSourceCorp/globstar](https://github.com/DeepSourceCorp/
 
 1. In `.github/workflows/ci.yml`, change the `main` branch to your pull request's branch's name.
 1. Always `npm run dist` before making a Git commit.
+1. Change the branch name back to `main` after testing is complete..

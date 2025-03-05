@@ -9,7 +9,7 @@ import cache from '@actions/tool-cache';
 
 async function setupGlobStar() {
     try {
-        const version = core.getInput('version');
+        let version = core.getInput('version');
         const authToken = core.getInput('auth-token');
         let downloadUrl;
         let shasumUrl;
@@ -23,6 +23,7 @@ async function setupGlobStar() {
 
             core.info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
+            version = response.result[0].tag_name.replace(/v/g, '');
             if (response.statusCode !== 200) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }

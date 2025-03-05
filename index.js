@@ -31,7 +31,7 @@ async function setupGlobStar() {
             shasumUrl = response.result[0].assets.find(asset => asset.name.includes('checksums.txt')).browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
-            shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/${version}/checksums.txt`;
+            shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/checksums.txt`;
         }
 
         core.info(`Downloading binary from ${downloadUrl}`);

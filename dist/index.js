@@ -30049,7 +30049,7 @@ async function setupGlobStar() {
         const hash = external_node_crypto_.createHash('sha256');
         hash.update(fileBuffer);
         const generatedShasum = hash.digest('hex');
-        if ((storedShasum !== generatedShasum)) {
+        if (storedShasum !== generatedShasum) {
             throw new Error(`Expected ${storedShasum}, but got ${generatedShasum}`);
         }
 

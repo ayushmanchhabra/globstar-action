@@ -11,7 +11,7 @@ async function setupGlobStar() {
     try {
         let version = core.getInput('version');
         const authToken = core.getInput('auth-token');
-        const cacheOption = core.getInput('cache');
+        const cacheOption = Boolean(core.getInput('cache'));
         let downloadUrl;
         let shasumUrl;
 
@@ -37,7 +37,7 @@ async function setupGlobStar() {
 
         let downloadPath = '';
         downloadPath = cache.find('globstar', version, getArch());
-        if (Boolean(cacheOption) || downloadPath) {
+        if (cacheOption || downloadPath) {
             core.info(`Found cached Globstar binary at ${downloadPath}`);
         } else {
             core.info(`Downloading binary from ${downloadUrl}`);
@@ -73,7 +73,7 @@ async function setupGlobStar() {
         const extractedPath = await cache.extractTar(downloadPath);
         const binaryPath = path.join(extractedPath, 'globstar');
         let cachePath = '';
-        if (Boolean(cacheOption)) {
+        if (cacheOption) {
             cachePath = await cache.cacheFile(binaryPath, 'globstar', 'globstar', getArch());
         } else {
             cachePath = binaryPath;

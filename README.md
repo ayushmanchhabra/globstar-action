@@ -38,6 +38,17 @@ A GitHub Action for [DeepSourceCorp/globstar](https://github.com/DeepSourceCorp/
     auth-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+### cache
+
+**Optional** Enable or disable caching of Globstar binary. Defaults to `false`.
+
+```yaml
+- name: Setup Globstar
+  uses: ayushmanchhabra/globstar-action@v0
+  with:
+    cache: true
+```
+
 ## Contributing
 
 ### Testing

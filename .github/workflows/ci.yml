@@ -38,6 +38,7 @@ jobs:
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "latest"
+
   test-version-specific:
     runs-on: ubuntu-24.04
     permissions:
@@ -65,6 +66,7 @@ jobs:
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "0.4.1"
+
   test-cache-option:
     runs-on: ubuntu-24.04
     permissions:
@@ -91,5 +93,5 @@ jobs:
         uses: ayushmanchhabra/globstar-action@cache
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
-          version: "0.4.1"
+          version: "latest"
           cache: true

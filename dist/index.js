@@ -30029,7 +30029,7 @@ async function setupGlobStar() {
 
         let downloadPath = '';
         downloadPath = tool_cache.find('globstar', version, getArch());
-        if (cacheOption || downloadPath) {
+        if (cacheOption & downloadPath !== '') {
             core.info(`Found cached Globstar binary at ${downloadPath}`);
         } else {
             core.info(`Downloading binary from ${downloadUrl}`);

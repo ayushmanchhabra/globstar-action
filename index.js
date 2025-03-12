@@ -39,7 +39,7 @@ async function setupGlobStar() {
         const cacheKey = `globstar-${version}-${getPlatform()}-${getArch()}`;
         downloadPath = cache.find(cacheKey);
         if (cacheOption || downloadPath) {
-            core.info(`Found cached Globstar binary at ${cachedPath}`);
+            core.info(`Found cached Globstar binary at ${downloadPath}`);
         } else {
             core.info(`Downloading binary from ${downloadUrl}`);
             downloadPath = await cache.downloadTool(downloadUrl);

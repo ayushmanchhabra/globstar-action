@@ -36,8 +36,7 @@ async function setupGlobStar() {
         }
 
         let downloadPath = '';
-        const cacheKey = `globstar-${version}-${getPlatform()}-${getArch()}`;
-        downloadPath = cache.find(cacheKey);
+        downloadPath = cache.find('globstar', version, getArch());
         if (cacheOption || downloadPath) {
             core.info(`Found cached Globstar binary at ${downloadPath}`);
         } else {

@@ -70,6 +70,8 @@ async function setupGlobStar() {
 
         core.info(`Verification of Globstar binary is successful`);
 
+        core.info(cacheOption);
+
         const extractedPath = await cache.extractTar(downloadPath);
         const binaryPath = path.join(extractedPath, 'globstar');
         let cachePath = '';

@@ -11,6 +11,7 @@ async function setupGlobStar() {
     try {
         let version = core.getInput('version');
         const authToken = core.getInput('auth-token');
+        const cacheOption = core.getInput('auth-token');
         let downloadUrl;
         let shasumUrl;
 
@@ -37,7 +38,7 @@ async function setupGlobStar() {
         let downloadPath = '';
         const cacheKey = `globstar-${version}-${getPlatform()}-${getArch()}`;
         downloadPath = cache.find(cacheKey);
-        if (downloadPath) {
+        if (cacheOption || downloadPath) {
             core.info(`Found cached Globstar binary at ${cachedPath}`);
         } else {
             core.info(`Downloading binary from ${downloadUrl}`);

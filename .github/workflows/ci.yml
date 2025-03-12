@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - cache
 
 concurrency:
   group: ${{ github.ref }}
@@ -34,7 +34,7 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@main
+        uses: ayushmanchhabra/globstar-action@cache
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "latest"
@@ -61,7 +61,35 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@main
+        uses: ayushmanchhabra/globstar-action@cache
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "0.4.1"
+  test-cache-option:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check for linting errors
+        run: npm run lint
+
+      - name: Build action
+        run: npm run dist
+
+      - name: Setup Globstar
+        uses: ayushmanchhabra/globstar-action@cache
+        with:
+          auth-token: ${{ secrets.GITHUB_TOKEN }}
+          version: "0.4.1"
+          cache: true

@@ -10,6 +10,10 @@ inputs:
     description: 'Auth token to use for downloading the version'
     required: true
     default: ${{ github.token }}
+  cache:
+    description: 'Enable or disable caching of Globstar binary'
+    required: true
+    default: false
 runs:
   using: node20
   main: 'dist/index.js'

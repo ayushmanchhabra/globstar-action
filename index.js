@@ -74,6 +74,7 @@ async function setupGlobStar() {
         const binaryPath = path.join(extractedPath, 'globstar');
         let cachePath = '';
         if (cacheOption) {
+            core.info(`Caching Globstar binary`);
             cachePath = await cache.cacheFile(binaryPath, 'globstar', 'globstar', getArch());
         } else {
             cachePath = binaryPath;

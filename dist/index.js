@@ -30065,7 +30065,7 @@ async function setupGlobStar() {
         const binaryPath = external_node_path_namespaceObject.join(extractedPath, 'globstar');
         let cachePath = '';
         if (cacheOption) {
-            core.info(`Caching Globstar binary`);
+            core.info(`Caching Globstar binary at ${cachePath}`);
             cachePath = await tool_cache.cacheFile(binaryPath, 'globstar', 'globstar', getArch());
         } else {
             cachePath = binaryPath;

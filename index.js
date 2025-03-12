@@ -47,7 +47,6 @@ async function setupGlobStar() {
         core.info(`Verifying shasum of Globstar binary.`);
         const shasumFilePath = await cache.downloadTool(shasumUrl);
         const shasumFileBuffer = await fs.promises.readFile(shasumFilePath, { encoding: 'utf-8' });
-        core.info(shasumFileBuffer);
 
         const shasums = shasumFileBuffer.trim().split('\n');
         const storedShasum = shasums.find((line) => {
@@ -69,8 +68,6 @@ async function setupGlobStar() {
         }
 
         core.info(`Verification of Globstar binary is successful`);
-
-        core.info(cacheOption);
 
         const extractedPath = await cache.extractTar(downloadPath);
         const binaryPath = path.join(extractedPath, 'globstar');

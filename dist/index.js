@@ -30003,6 +30003,7 @@ async function setupGlobStar() {
     try {
         let version = core.getInput('version');
         const authToken = core.getInput('auth-token');
+        const cacheOption = Boolean(core.getInput('cache'));
         let downloadUrl;
         let shasumUrl;
 
@@ -30026,13 +30027,19 @@ async function setupGlobStar() {
             shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/checksums.txt`;
         }
 
-        core.info(`Downloading binary from ${downloadUrl}`);
-        const downloadPath = await tool_cache.downloadTool(downloadUrl);
+        let downloadPath = '';
+        downloadPath = tool_cache.find('globstar', version);
+        if (cacheOption && downloadPath !== '') {
+            core.info(`Found cached Globstar binary at ${downloadPath}`);
+        } else {
+            core.info(`Unable to find cached Globstar binary`);
+            core.info(`Downloading binary from ${downloadUrl}`);
+            downloadPath = await tool_cache.downloadTool(downloadUrl);
+        }
 
         core.info(`Verifying shasum of Globstar binary.`);
         const shasumFilePath = await tool_cache.downloadTool(shasumUrl);
         const shasumFileBuffer = await external_node_fs_namespaceObject.promises.readFile(shasumFilePath, { encoding: 'utf-8' });
-        core.info(shasumFileBuffer);
 
         const shasums = shasumFileBuffer.trim().split('\n');
         const storedShasum = shasums.find((line) => {
@@ -30057,9 +30064,16 @@ async function setupGlobStar() {
 
         const extractedPath = await tool_cache.extractTar(downloadPath);
         const binaryPath = external_node_path_namespaceObject.join(extractedPath, 'globstar');
+        let cachePath = '';
+        if (cacheOption) {
+            cachePath = await tool_cache.cacheDir(extractedPath, 'globstar', version);
+            core.info(`Caching Globstar binary at ${cachePath}`);
+        } else {
+            cachePath = binaryPath;
+        }
 
-        core.addPath(binaryPath);
-        core.info(`Added ${binaryPath} to PATH`);
+        core.addPath(cachePath);
+        core.info(`Added ${cachePath} to PATH`);
     } catch (error) {
         if (
             error instanceof lib.HttpClientError &&
@@ -30095,7 +30109,7 @@ function getArch() {
         return 'x86';
     } else if (arch === 'x64') {
         return 'amd64';
-    } else if (arch == 'arm64') {
+    } else if (arch === 'arm64') {
         return 'arm64';
     } else {
         throw new Error(`Unsupported architecture: ${arch}`);

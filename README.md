@@ -11,7 +11,7 @@ A GitHub Action for [DeepSourceCorp/globstar](https://github.com/DeepSourceCorp/
 
 ### version
 
-**Optional** The version to download. Defaults to `latest`. Please consult [globstart releases](https://github.com/DeepSourceCorp/globstar/releases) for specific versions.
+**Optional** The version to download. Defaults to `latest`. Please consult [globstar releases](https://github.com/DeepSourceCorp/globstar/releases) for specific versions.
 
 ```yaml
 - name: Setup Globstar
@@ -36,6 +36,17 @@ A GitHub Action for [DeepSourceCorp/globstar](https://github.com/DeepSourceCorp/
   uses: ayushmanchhabra/globstar-action@v0
   with:
     auth-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### cache
+
+**Optional** Enable or disable caching of Globstar binary. Defaults to `false`.
+
+```yaml
+- name: Setup Globstar
+  uses: ayushmanchhabra/globstar-action@v0
+  with:
+    cache: true
 ```
 
 ## Contributing

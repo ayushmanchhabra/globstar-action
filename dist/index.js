@@ -30028,8 +30028,8 @@ async function setupGlobStar() {
         }
 
         let downloadPath = '';
-        downloadPath = tool_cache.find('globstar', version, getArch());
-        if (cacheOption & downloadPath !== '') {
+        downloadPath = tool_cache.find('globstar', version);
+        if (cacheOption && downloadPath !== '') {
             core.info(`Found cached Globstar binary at ${downloadPath}`);
         } else {
             core.info(`Downloading binary from ${downloadUrl}`);
@@ -30066,7 +30066,7 @@ async function setupGlobStar() {
         let cachePath = '';
         if (cacheOption) {
             core.info(`Caching Globstar binary at ${cachePath}`);
-            cachePath = await tool_cache.cacheFile(binaryPath, 'globstar', 'globstar', getArch());
+            cachePath = await tool_cache.cacheDir(extractedPath, 'globstar', version);
         } else {
             cachePath = binaryPath;
         }

@@ -30032,6 +30032,7 @@ async function setupGlobStar() {
         if (cacheOption && downloadPath !== '') {
             core.info(`Found cached Globstar binary at ${downloadPath}`);
         } else {
+            core.info(`Unable to find cached Globstar binary`);
             core.info(`Downloading binary from ${downloadUrl}`);
             downloadPath = await tool_cache.downloadTool(downloadUrl);
         }

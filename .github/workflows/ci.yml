@@ -34,7 +34,7 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@cache
+        uses: ayushmanchhabra/globstar-action@main
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "latest"
@@ -62,7 +62,7 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@cache
+        uses: ayushmanchhabra/globstar-action@main
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "0.4.1"
@@ -90,7 +90,7 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@cache
+        uses: ayushmanchhabra/globstar-action@main
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "latest"

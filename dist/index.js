@@ -30108,7 +30108,7 @@ function getArch() {
         return 'x86';
     } else if (arch === 'x64') {
         return 'amd64';
-    } else if (arch == 'arm64') {
+    } else if (arch === 'arm64') {
         return 'arm64';
     } else {
         throw new Error(`Unsupported architecture: ${arch}`);

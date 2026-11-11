@@ -37299,7 +37299,8 @@ async function setupGlobStar() {
     try {
         let version = getInput('version');
         const authToken = getInput('auth-token');
-        const cacheOption = Boolean(getInput('cache'));
+        /* Boolean('false') is true: parse the input as a YAML boolean instead. */
+        const cacheOption = getBooleanInput('cache');
         let downloadUrl;
         let shasumUrl;
 
@@ -37325,15 +37326,20 @@ async function setupGlobStar() {
             shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/checksums.txt`;
         }
 
-        let downloadPath = '';
-        downloadPath = find('globstar', version);
-        if (cacheOption && downloadPath !== '') {
-            info(`Found cached Globstar binary at ${downloadPath}`);
-        } else {
-            info(`Unable to find cached Globstar binary`);
-            info(`Downloading binary from ${downloadUrl}`);
-            downloadPath = await downloadTool(downloadUrl);
+        /* A cached binary was verified when it was cached: use it as is. */
+        const cachedPath = cacheOption ? find('globstar', version) : '';
+        if (cachedPath !== '') {
+            info(`Found cached Globstar binary at ${cachedPath}`);
+            addPath(cachedPath);
+            info(`Added ${cachedPath} to PATH`);
+            return;
         }
+        if (cacheOption) {
+            info(`Unable to find cached Globstar binary`);
+        }
+
+        info(`Downloading binary from ${downloadUrl}`);
+        const downloadPath = await downloadTool(downloadUrl);
 
         info(`Verifying shasum of Globstar binary.`);
         const shasumFilePath = await downloadTool(shasumUrl);

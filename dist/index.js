@@ -32749,8 +32749,6 @@ var external_node_crypto_ = __nccwpck_require__(7598);
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: external "node:os"
 const external_node_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:os");
-;// CONCATENATED MODULE: external "node:path"
-const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
 ;// CONCATENATED MODULE: external "os"
 const external_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("os");
 ;// CONCATENATED MODULE: ./node_modules/@actions/core/lib/utils.js
@@ -37297,7 +37295,6 @@ function _unique(values) {
 
 
 
-
 async function setupGlobStar() {
     try {
         let version = getInput('version');
@@ -37315,12 +37312,14 @@ async function setupGlobStar() {
 
             info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
-            version = response.result[0].tag_name.replace(/v/g, '');
-            if (response.statusCode !== 200) {
+            if (response.statusCode !== 200 || !Array.isArray(response.result)) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
-            downloadUrl = response.result[0].assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
-            shasumUrl = response.result[0].assets.find(asset => asset.name.includes('checksums.txt')).browser_download_url;
+            const release = findRelease(response.result, getPlatform(), getArch());
+            version = releaseVersion(release);
+            info(`Using Globstar ${version}, the newest release with a ${getPlatform()} ${getArch()} binary`);
+            downloadUrl = release.assets.find((asset) => asset.name === assetName(version, getPlatform(), getArch())).browser_download_url;
+            shasumUrl = release.assets.find((asset) => asset.name === 'checksums.txt').browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
             shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/checksums.txt`;
@@ -37362,13 +37361,13 @@ async function setupGlobStar() {
         info(`Verification of Globstar binary is successful`);
 
         const extractedPath = await extractTar(downloadPath);
-        const binaryPath = external_node_path_namespaceObject.join(extractedPath, 'globstar');
         let cachePath = '';
         if (cacheOption) {
             cachePath = await cacheDir(extractedPath, 'globstar', version);
             info(`Caching Globstar binary at ${cachePath}`);
         } else {
-            cachePath = binaryPath;
+            /* PATH entries are directories: add the one holding the binary. */
+            cachePath = extractedPath;
         }
 
         addPath(cachePath);
@@ -37386,6 +37385,49 @@ async function setupGlobStar() {
             setFailed(error.message);
         }
     }
+}
+
+/**
+ * Name of the Globstar release archive for a platform and architecture.
+ * @param {string} version
+ * @param {string} platform
+ * @param {string} arch
+ * @returns {string}
+ */
+function assetName(version, platform, arch) {
+    return `globstar_${version}_${platform}_${arch}.tar.gz`;
+}
+
+/**
+ * Version of a GitHub release, without the leading `v` of its tag.
+ * @param {{ tag_name: string }} release
+ * @returns {string}
+ */
+function releaseVersion(release) {
+    return release.tag_name.replace(/^v/, '');
+}
+
+/**
+ * Find the newest published release with a binary for this platform and
+ * architecture. Not every release ships every binary: v0.7.2, for example,
+ * only has darwin_arm64.
+ * @param {Array<{ tag_name: string, draft: boolean, prerelease: boolean, assets: Array<{ name: string }> }>} releases  Newest first, as the GitHub API lists them.
+ * @param {string} platform
+ * @param {string} arch
+ * @returns {object}
+ */
+function findRelease(releases, platform, arch) {
+    const release = releases.find((candidate) => {
+        if (candidate.draft || candidate.prerelease) {
+            return false;
+        }
+        const names = candidate.assets.map((asset) => asset.name);
+        return names.includes(assetName(releaseVersion(candidate), platform, arch)) && names.includes('checksums.txt');
+    });
+    if (release === undefined) {
+        throw new Error(`No Globstar release has a ${platform} ${arch} binary.`);
+    }
+    return release;
 }
 
 function getPlatform() {

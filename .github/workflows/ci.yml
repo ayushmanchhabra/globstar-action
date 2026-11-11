@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6.4.0
         with:
-          node-version: '20'
+          node-version: '26'
 
       - name: Install dependencies
         run: npm install
@@ -34,10 +34,14 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@main
+        uses: ./
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "latest"
+
+      - name: Check that Globstar runs
+        run: globstar --version
+
 
   test-version-specific:
     runs-on: ubuntu-24.04
@@ -50,7 +54,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6.4.0
         with:
-          node-version: '20'
+          node-version: '26'
 
       - name: Install dependencies
         run: npm install
@@ -62,10 +66,14 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@main
+        uses: ./
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "0.4.1"
+
+      - name: Check that Globstar runs
+        run: globstar --version
+
 
   test-cache-option:
     runs-on: ubuntu-24.04
@@ -78,7 +86,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6.4.0
         with:
-          node-version: '20'
+          node-version: '26'
 
       - name: Install dependencies
         run: npm install
@@ -90,8 +98,11 @@ jobs:
         run: npm run dist
 
       - name: Setup Globstar
-        uses: ayushmanchhabra/globstar-action@main
+        uses: ./
         with:
           auth-token: ${{ secrets.GITHUB_TOKEN }}
           version: "latest"
           cache: true
+
+      - name: Check that Globstar runs
+        run: globstar --version

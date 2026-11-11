@@ -1,7 +1,6 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
-import path from 'node:path';
 
 import * as core from '@actions/core';
 import client from '@actions/http-client';
@@ -24,12 +23,14 @@ async function setupGlobStar() {
 
             core.info('Fetching latest release version from GitHub');
             const response = await http.getJson('https://api.github.com/repos/DeepSourceCorp/globstar/releases', { authorization: authToken });
-            version = response.result[0].tag_name.replace(/v/g, '');
-            if (response.statusCode !== 200) {
+            if (response.statusCode !== 200 || !Array.isArray(response.result)) {
                 throw new Error(`Failed to fetch releases: ${response.statusCode}`);
             }
-            downloadUrl = response.result[0].assets.find(asset => asset.name.includes(getPlatform())).browser_download_url;
-            shasumUrl = response.result[0].assets.find(asset => asset.name.includes('checksums.txt')).browser_download_url;
+            const release = findRelease(response.result, getPlatform(), getArch());
+            version = releaseVersion(release);
+            core.info(`Using Globstar ${version}, the newest release with a ${getPlatform()} ${getArch()} binary`);
+            downloadUrl = release.assets.find((asset) => asset.name === assetName(version, getPlatform(), getArch())).browser_download_url;
+            shasumUrl = release.assets.find((asset) => asset.name === 'checksums.txt').browser_download_url;
         } else {
             downloadUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/globstar_${version}_${getPlatform()}_${getArch()}.tar.gz`;
             shasumUrl = `https://github.com/DeepSourceCorp/globstar/releases/download/v${version}/checksums.txt`;
@@ -71,13 +72,13 @@ async function setupGlobStar() {
         core.info(`Verification of Globstar binary is successful`);
 
         const extractedPath = await cache.extractTar(downloadPath);
-        const binaryPath = path.join(extractedPath, 'globstar');
         let cachePath = '';
         if (cacheOption) {
             cachePath = await cache.cacheDir(extractedPath, 'globstar', version);
             core.info(`Caching Globstar binary at ${cachePath}`);
         } else {
-            cachePath = binaryPath;
+            /* PATH entries are directories: add the one holding the binary. */
+            cachePath = extractedPath;
         }
 
         core.addPath(cachePath);
@@ -95,6 +96,49 @@ async function setupGlobStar() {
             core.setFailed(error.message);
         }
     }
+}
+
+/**
+ * Name of the Globstar release archive for a platform and architecture.
+ * @param {string} version
+ * @param {string} platform
+ * @param {string} arch
+ * @returns {string}
+ */
+function assetName(version, platform, arch) {
+    return `globstar_${version}_${platform}_${arch}.tar.gz`;
+}
+
+/**
+ * Version of a GitHub release, without the leading `v` of its tag.
+ * @param {{ tag_name: string }} release
+ * @returns {string}
+ */
+function releaseVersion(release) {
+    return release.tag_name.replace(/^v/, '');
+}
+
+/**
+ * Find the newest published release with a binary for this platform and
+ * architecture. Not every release ships every binary: v0.7.2, for example,
+ * only has darwin_arm64.
+ * @param {Array<{ tag_name: string, draft: boolean, prerelease: boolean, assets: Array<{ name: string }> }>} releases  Newest first, as the GitHub API lists them.
+ * @param {string} platform
+ * @param {string} arch
+ * @returns {object}
+ */
+function findRelease(releases, platform, arch) {
+    const release = releases.find((candidate) => {
+        if (candidate.draft || candidate.prerelease) {
+            return false;
+        }
+        const names = candidate.assets.map((asset) => asset.name);
+        return names.includes(assetName(releaseVersion(candidate), platform, arch)) && names.includes('checksums.txt');
+    });
+    if (release === undefined) {
+        throw new Error(`No Globstar release has a ${platform} ${arch} binary.`);
+    }
+    return release;
 }
 
 function getPlatform() {
